@@ -1,23 +1,41 @@
 import React from "react";
-import {View, Text,  TouchableOpacity, FlatList, Image}  from 'react-native';
+import { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 
-const Cliente =  ({navigation}) => {
+import api from "../api/ApiService.js";
 
-    useEffect(() => {
-        api
-          .get("/cliente")
-          .then((response) => console.log(response.data))
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-          });
-      }, []);
+const Cliente = ({ navigation }) => {
+  const [allClientes, setAllClientes] = useState([]);
 
+  useEffect(() => {
+    const getClientes = async () => {
+      const clientes = await api.get("/cliente");
+      setAllClientes(clientes.data);
+      console.log(clientes.data);
+    };
 
-    return (
-       <View>
-        <Text> OK </Text>
-       </View>
-    )
-}
+    getClientes();
+  }, []);
+
+  return (
+    <View>
+      <FlatList
+        data={allClientes}
+        renderItem={({item}) =>{
+            return(
+                <>
+                 <Text>Id: {item.id}</Text>
+                <Text>Nome: {item.nome}</Text>
+                <Text>Email: {item.email}</Text>
+                <Text>Cpf: {item.cpf}</Text>
+                <Text>Telefone: {item.telefone}</Text>
+                <Text>Ativo: {item.ativo == 1 && "Ativo" }</Text>
+                </>
+            )
+        }}
+      />
+    </View>
+  );
+};
 
 export default Cliente;

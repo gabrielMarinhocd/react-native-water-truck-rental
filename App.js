@@ -10,30 +10,12 @@ import  api from './api/ApiService';
 
 export default function App() {
 
-  useEffect(() => {
-    api
-      .get("/cliente")
-      .then((response) => console.log(response.data))
-      .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
-      });
-  }, []);
-
   function HomeScreen({ navigation }) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Button
-          onPress={() => navigation.navigate('Notifications')}
-          title="Go to notifications"
+          title="Go to Clientes"
         />
-      </View>
-    );
-  }
-  
-  function NotificationsScreen({ navigation }) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button onPress={() => navigation.goBack()} title="Go back home" />
       </View>
     );
   }

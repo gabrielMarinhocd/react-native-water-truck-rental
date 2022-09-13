@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-
+import Servico from './components/Servico';
 import Cliente from './components/Clientes';
 
 import  api from './api/ApiService';
@@ -28,6 +28,7 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Cliente " component={Cliente} />
+        <Drawer.Screen name="Serviço " component={Servico} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

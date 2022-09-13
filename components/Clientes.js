@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image, Button } from "react-native";
 
 import api from "../api/ApiService.js";
 
@@ -19,6 +19,9 @@ const Cliente = ({ navigation }) => {
 
   return (
     <View>
+        <Button
+          title="+"
+        />
       <FlatList
         data={allClientes}
         renderItem={({item}) =>{

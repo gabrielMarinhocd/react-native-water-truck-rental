@@ -1,6 +1,20 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { View, Text, Modal, TextField, TextInput, TouchableOpacity, StyleSheet,  Pressable, FlatList, Image, Button } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  TextField,
+  TextInput,
+  TouchableOpacity,
+  TouchableHighlight,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Image,
+  Button,
+  SafeAreaView,
+} from "react-native";
 
 import api from "../api/ApiService.js";
 
@@ -14,16 +28,16 @@ const Servico = ({ navigation }) => {
     const createServico = {
       tipo: formTipo,
       nome: formNome,
-    }
+    };
 
-     const post = await api.post("/servico", createServico);
-     console.log(post.data);
-     const data = allServicos
-     data.push(post.data[0])
+    const post = await api.post("/servico", createServico);
+    console.log(post.data);
+    const data = allServicos;
+    data.push(post.data[0]);
     //  setAllServicos(data)
-      console.log(data);     
-     setModalVisible(!modalVisible);
-  }
+    console.log(data);
+    setModalVisible(!modalVisible);
+  };
 
   useEffect(() => {
     const getServicos = async () => {
@@ -31,17 +45,40 @@ const Servico = ({ navigation }) => {
       setAllServicos(Servicos.data);
       console.log(Servicos.data);
     };
-
-    getServicos();
+    if(allServicos.length === 0){
+      getServicos();
+    }
+    
   }, []);
 
+  const deleteServico = async (id) => {
+    // const isDelete = await api.delete(`/servico?id=${id}`);
+    const isDelete = true
+    const newData =  Object.assign([], allServicos);
+
+    if (isDelete){
+      const deleteServicoIndex = allServicos.findIndex(
+        (data) => data.id  == id
+      );
+      const numeros = [1,2, 3]
+      
+      const teste = newData.splice(deleteServicoIndex , 1);
+      console.log(teste)
+
+  
+
+      // newData.slice( deleteServicoIndex, 1)
+      // console.log(newData);
+
+      setAllServicos(newData)
+    }
+
+  };
+
   return (
-    <View style={styles.centeredView}>
-        <Button
-          title="+"
-          onPress={() => setModalVisible(true)}
-        />
-        <Modal
+    <SafeAreaView style={styles.centeredView}>
+      <Button title="+" onPress={() => setModalVisible(true)} />
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -49,48 +86,54 @@ const Servico = ({ navigation }) => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView} >
-          <View style={styles.modalView} >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
             <Text style={styles.modalText}>Cadastrar:</Text>
 
             <>
-            <TextInput
-                 placeholder="Tipo:"
-                 onChangeText={setFormNome}
-                 value={formNome}
-            />
-            <TextInput
-                 placeholder="Tipo:"
-                 onChangeText={setFormTipo}
-                 value={formTipo}
-            />
+              <TextInput
+                placeholder="Tipo:"
+                onChangeText={setFormNome}
+                value={formNome}
+              />
+              <TextInput
+                placeholder="Tipo:"
+                onChangeText={setFormTipo}
+                value={formTipo}
+              />
             </>
-   
+
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={save}
             >
-              <Text style={styles.textStyle} >Salvar</Text>
+              <Text style={styles.textStyle}>Salvar</Text>
             </Pressable>
-            
           </View>
         </View>
       </Modal>
-      
+
       <FlatList
         data={allServicos}
-        renderItem={({item}) =>{
-            return(
-                <>
-                 <Text>Id: {item.id}</Text>
-                <Text>Tipo: {item.tipo}</Text>
-                <Text>Nome: {item.nome}</Text>
-                <Text>Ativo: {item.ativo == 1 && "Ativo" }</Text>
-                </>
-            )
+        keyExtractor={item => item.id} 
+        renderItem={({ item }) => {
+          return (
+            <>
+              <Text>Id: {item.id}</Text>
+              <Text>Tipo: {item.tipo}</Text>
+              <Text>Nome: {item.nome}</Text>
+              <Text>Ativo: {item.ativo == 1 && "Ativo"}</Text>
+              <Button title=" - " onPress={() => deleteServico(item.id)} />
+              {/* <TouchableHighlight onPress={deleteServico(item.id)}>
+                <View style={styles.button}>
+                  <Text>Touch Here</Text>
+                </View>
+              </TouchableHighlight> */}
+            </>
+          );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -99,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10
+    marginTop: 10,
   },
   modalView: {
     margin: 10,
@@ -110,16 +153,16 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
@@ -130,12 +173,12 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 });
 
 export default Servico;

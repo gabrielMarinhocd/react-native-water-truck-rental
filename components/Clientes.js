@@ -91,7 +91,6 @@ const Cliente = ({ navigation }) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Cadastrar:</Text>
-
           <>
             <TextInput
               placeholder="Nome:"
@@ -132,15 +131,13 @@ const Cliente = ({ navigation }) => {
         renderItem={({item}) =>{
         return (
           <>
-             <>
-                <Text>Id: {item.id}</Text>
-                <Text>Nome: {item.nome}</Text>
-                <Text>Email: {item.email}</Text>
-                <Text>Cpf: {item.cpf}</Text>
-                <Text>Telefone: {item.telefone}</Text>
-                <Text>Ativo: {item.ativo == 1 && "Ativo" }</Text>
-                <Button title=" - " onPress={() => deleteCliente(item.id)} />
-                </>
+            <Text>Id: {item.id}</Text>
+            <Text>Nome: {item.nome}</Text>
+            <Text>Email: {item.email}</Text>
+            <Text>Cpf: {item.cpf}</Text>
+            <Text>Telefone: {item.telefone}</Text>
+            <Text>Ativo: {item.ativo == 1 && "Ativo" }</Text>
+            <Button title=" - " onPress={() => deleteCliente(item.id)} />
           </>
         );
       }}

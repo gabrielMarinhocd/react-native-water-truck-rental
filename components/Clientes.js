@@ -30,11 +30,9 @@ const Cliente = ({ navigation }) => {
       const clientes = await api.get("/cliente");
       setAllClientes(clientes.data);
     };
-    if(allClientes.length == 0){
-
+    if (allClientes.length == 0) {
       getClientes();
     }
-
   }, []);
 
   const save = async () => {
@@ -46,103 +44,90 @@ const Cliente = ({ navigation }) => {
     };
 
     const post = await api.post("/cliente", createServico);
-    console.log(post.data);
     const data = allClientes;
     data.push(post.data[0]);
-    //  setAllServicos(data)
-    console.log(data);
+
     setModalVisible(!modalVisible);
   };
 
   const deleteCliente = async (id) => {
-    // const isDelete = await api.delete(`/servico?id=${id}`);
-    const isDelete = true
-    const newData =  Object.assign([], allClientes);
+    const isDelete = await api.delete(`/cliente?id=${id}`);
 
-    // console.log(id);
-    if (isDelete){
-      const deleteServicoIndex = allClientes.findIndex(
-        (data) => data.id  == id
-      );
-      // console.log(deleteServicoIndex);
-      
-     newData.slice( deleteServicoIndex, 1);
-      console.log(teste);
+    const newData = Object.assign([], allClientes);
 
-      console.log(newData[1]);
-      // console.log(newData);
-      setAllClientes(newData)
-      // console.log(allServicos)
+    if (isDelete) {
+      const deleteClienteIndex = allClientes.findIndex((data) => data.id == id);
+
+      newData.splice(deleteClienteIndex, 1);
+      setAllClientes(newData);
     }
-
   };
 
   return (
     <SafeAreaView style={styles.centeredView}>
-    <Button title="+" onPress={() => setModalVisible(true)} />
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Cadastrar:</Text>
-          <>
-            <TextInput
-              placeholder="Nome:"
-              onChangeText={setFormNome}
-              value={formNome}
-            />
-            <TextInput
-              placeholder="Email:"
-              onChangeText={setFormEmail}
-              value={formEmail}
-            />
-            <TextInput
-              placeholder="CPF:"
-              onChangeText={setFormCpf}
-              value={formCpf}
-            />
-            <TextInput
-              placeholder="Telefone:"
-              onChangeText={setFormTelefone}
-              value={formTelefone}
-            />
-      
-          </>
+      <Button title="+" onPress={() => setModalVisible(true)} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Cadastrar:</Text>
+            <>
+              <TextInput
+                placeholder="Nome:"
+                onChangeText={setFormNome}
+                value={formNome}
+              />
+              <TextInput
+                placeholder="Email:"
+                onChangeText={setFormEmail}
+                value={formEmail}
+              />
+              <TextInput
+                placeholder="CPF:"
+                onChangeText={setFormCpf}
+                value={formCpf}
+              />
+              <TextInput
+                placeholder="Telefone:"
+                onChangeText={setFormTelefone}
+                value={formTelefone}
+              />
+            </>
 
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            onPress={save}
-          >
-            <Text style={styles.textStyle}>Salvar</Text>
-          </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={save}
+            >
+              <Text style={styles.textStyle}>Salvar</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
 
-    <FlatList
-      data={allClientes}
-      keyExtractor={item => item.id} 
-        renderItem={({item}) =>{
-        return (
-          <>
-            <Text>Id: {item.id}</Text>
-            <Text>Nome: {item.nome}</Text>
-            <Text>Email: {item.email}</Text>
-            <Text>Cpf: {item.cpf}</Text>
-            <Text>Telefone: {item.telefone}</Text>
-            <Text>Ativo: {item.ativo == 1 && "Ativo" }</Text>
-            <Button title=" - " onPress={() => deleteCliente(item.id)} />
-          </>
-        );
-      }}
-    />
-  </SafeAreaView>
+      <FlatList
+        data={allClientes}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => {
+          return (
+            <>
+              <Text>Id: {item.id}</Text>
+              <Text>Nome: {item.nome}</Text>
+              <Text>Email: {item.email}</Text>
+              <Text>Cpf: {item.cpf}</Text>
+              <Text>Telefone: {item.telefone}</Text>
+              <Text>Ativo: {item.ativo == 1 ? "Ativo" : "Destivado" }</Text>
+              <Button title=" - " onPress={() => deleteCliente(item.id)} />
+            </>
+          );
+        }}
+      />
+    </SafeAreaView>
   );
 };
 

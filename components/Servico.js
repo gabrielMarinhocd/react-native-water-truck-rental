@@ -31,11 +31,9 @@ const Servico = ({ navigation }) => {
     };
 
     const post = await api.post("/servico", createServico);
-    console.log(post.data);
     const data = allServicos;
     data.push(post.data[0]);
-    //  setAllServicos(data)
-    console.log(data);
+
     setModalVisible(!modalVisible);
   };
 
@@ -43,8 +41,8 @@ const Servico = ({ navigation }) => {
     const getServicos = async () => {
       const Servicos = await api.get("/Servico");
       setAllServicos(Servicos.data);
-      console.log(Servicos.data);
     };
+
     if(allServicos.length === 0){
       getServicos();
     }
@@ -52,24 +50,16 @@ const Servico = ({ navigation }) => {
   }, []);
 
   const deleteServico = async (id) => {
-    // const isDelete = await api.delete(`/servico?id=${id}`);
-    const isDelete = true
+    const isDelete = await api.delete(`/servico?id=${id}`);
+
     const newData =  Object.assign([], allServicos);
 
     if (isDelete){
       const deleteServicoIndex = allServicos.findIndex(
         (data) => data.id  == id
       );
-      const numeros = [1,2, 3]
-      
-      const teste = newData.splice(deleteServicoIndex , 1);
-      console.log(teste)
-
-  
-
-      // newData.slice( deleteServicoIndex, 1)
-      // console.log(newData);
-
+     
+      newData.splice(deleteServicoIndex , 1);
       setAllServicos(newData)
     }
 
@@ -122,8 +112,8 @@ const Servico = ({ navigation }) => {
               <Text>Id: {item.id}</Text>
               <Text>Tipo: {item.tipo}</Text>
               <Text>Nome: {item.nome}</Text>
-              <Text>Ativo: {item.ativo == 1 && "Ativo"}</Text>
-              <Button title=" - " onPress={() => deleteServico(item.id)} />
+              <Text>Ativo: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
+              <Button title="-" onPress={() => deleteServico(item.id)} />
               {/* <TouchableHighlight onPress={deleteServico(item.id)}>
                 <View style={styles.button}>
                   <Text>Touch Here</Text>

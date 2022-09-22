@@ -5,6 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import Servico from './components/Servico';
 import Cliente from './components/Clientes';
+import Catalago from './components/Catalago';
 
 import  api from './api/ApiService';
 
@@ -29,6 +30,7 @@ export default function App() {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Cliente " component={Cliente} />
         <Drawer.Screen name="Serviço " component={Servico} />
+        <Drawer.Screen name="Catalago " component={Catalago} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

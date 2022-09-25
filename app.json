@@ -24,10 +24,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.biel32771.projectpipa"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Water truck rental app",
+    "githubUrl": "https://github.com/gabrielMarinhocd/water-truck-rental-app"
   }
 }

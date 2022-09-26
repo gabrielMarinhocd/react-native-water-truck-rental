@@ -1,8 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { View, Text,FlatList, DevSettings, RefreshControl } from "react-native";
+import { View, Text,FlatList, DevSettings, RefreshControl, Button } from "react-native";
 import sessionStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import api from "../api/ApiService.js";
 
 const FinalizaServico = ({ navigation }) => {
   const [allItens, setAllItens] = useState([]);
@@ -10,7 +12,6 @@ const FinalizaServico = ({ navigation }) => {
   const getItemsServicos = async () => {
     const value = await sessionStorage.getItem("item_servico");
     setAllItens(JSON.parse(value));
-    console.log(allItens);
   
   };
 
@@ -18,10 +19,24 @@ const FinalizaServico = ({ navigation }) => {
    
     getItemsServicos();
 
-    // console.log(allItems);
   },[]);
 
-  const onRefresh = () =>{
+
+  const save = async () => {
+    let createPedido = {
+      itens: 
+        allItens
+      
+    }    
+
+    const post = await api.post("/pedido", createPedido);
+
+    await sessionStorage.setItem("item_servico",JSON.stringify([]));
+
+    navigation.navigate("Home")
+  };
+
+  const onRefresh = () => {
     console.log("Teste");
     setRefreshing(false);
     getItemsServicos();
@@ -55,6 +70,9 @@ const FinalizaServico = ({ navigation }) => {
           );
         }}
       />
+
+      <Button title="Finalizar Serviço" onPress={() => save()}/>
+      
 
     </SafeAreaView>
   );

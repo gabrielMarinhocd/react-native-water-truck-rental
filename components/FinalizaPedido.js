@@ -26,18 +26,16 @@ const FinalizaServico = ({ navigation }) => {
     let createPedido = {
       itens: 
         allItens
-      
     }    
-
+    console.log(createPedido)
     const post = await api.post("/pedido", createPedido);
 
     await sessionStorage.setItem("item_servico",JSON.stringify([]));
-
+console.log(post.data);
     navigation.navigate("Home")
   };
 
   const onRefresh = () => {
-    console.log("Teste");
     setRefreshing(false);
     getItemsServicos();
   }
@@ -64,8 +62,8 @@ const FinalizaServico = ({ navigation }) => {
               <Text>Data: {item.date}</Text>
               <Text>Forma Pagamento: {item.forma_pagamento}</Text>
               <Text>Hora: {item.hora}</Text>
-              <Text>Hora: {item.quantidade_litros}</Text>
-
+              <Text>Listros: {item.quantidade_litros}</Text>
+              
             </>
           );
         }}

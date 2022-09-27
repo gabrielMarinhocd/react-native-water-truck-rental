@@ -7,6 +7,7 @@ import Servico from './components/Servico';
 import Cliente from './components/Clientes';
 import Catalago from './components/Catalago';
 import FinalizaServico from './components/FinalizaPedido';
+import Pedido from './components/Pedidos';
 
 import  api from './api/ApiService';
 
@@ -33,6 +34,7 @@ export default function App() {
         <Drawer.Screen name="Serviço " component={Servico} />
         <Drawer.Screen name="Catalago " component={Catalago} />
         <Drawer.Screen name="FinalizaServico" component={FinalizaServico} />
+        <Drawer.Screen name="Pedidos" component={Pedido} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

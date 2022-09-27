@@ -14,15 +14,22 @@ import {
   Image,
   Button,
   SafeAreaView,
+  RefreshControl,
 } from "react-native";
 
 import api from "../api/ApiService.js";
 
 const Pedido = ({ navigation }) => {
   const [allPedidos, setAllPedidos] = useState([]);
+  const [allItens, setAllItens] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [formNome, setFormNome] = useState("");
-  const [formTipo, setFormTipo] = useState("");
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const getPedidos = async () => {
+    const Pedidos = await api.get("/Pedido");
+    setAllPedidos(Pedidos.data);
+  };
 
   const save = async () => {
     const createPedido = {
@@ -38,36 +45,40 @@ const Pedido = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const getPedidos = async () => {
-      const Pedidos = await api.get("/Pedido");
-      setAllPedidos(Pedidos.data);
-    };
-
-    if(allPedidos.length === 0){
+    if (allPedidos.length === 0) {
       getPedidos();
+
     }
-    
   }, []);
+
 
   const deletePedido = async (id) => {
     const isDelete = await api.delete(`/pedido?id=${id}`);
 
-    const newData =  Object.assign([], allPedidos);
+    const newData = Object.assign([], allPedidos);
 
-    if (isDelete){
-      const deletePedidoIndex = allPedidos.findIndex(
-        (data) => data.id  == id
-      );
-     
-      newData.splice(deletePedidoIndex , 1);
-      setAllPedidos(newData)
+    if (isDelete) {
+      const deletePedidoIndex = allPedidos.findIndex((data) => data.id == id);
+
+      newData.splice(deletePedidoIndex, 1);
+      setAllPedidos(newData);
     }
+  };
 
+  const onRefresh = () => {
+    setRefreshing(false);
+    getPedidos();
+ 
+  };
+
+  const getItensPedido = async (id) => {
+    const get = await api.get(`/pedido/itens?id=${id}`);
+    setAllItens(get.data)
+    setModalVisible(!modalVisible);
   };
 
   return (
     <SafeAreaView style={styles.centeredView}>
-      <Button title="+" onPress={() => setModalVisible(true)} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -78,26 +89,35 @@ const Pedido = ({ navigation }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Cadastrar:</Text>
-
-            <>
-              <TextInput
-                placeholder="Tipo:"
-                onChangeText={setFormNome}
-                value={formNome}
-              />
-              <TextInput
-                placeholder="Tipo:"
-                onChangeText={setFormTipo}
-                value={formTipo}
-              />
-            </>
+            <Text style={styles.modalText}>Lista de Itens:</Text>
+            <FlatList
+              data={allItens}
+              keyExtractor={(item) => item.id}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              renderItem={({ item }) => {
+                return (
+                  <>
+                    <Text>Serviço: {item.no_servico}</Text>
+                    <Text>Codigo: {item.id}</Text>
+                    <Text>Data Inicio: {item.data_inicio}</Text>
+                    <Text>Data Termino: {item.data_termino}</Text>
+                    <Text>Forma Pagamento: {item.forma_pagamento}</Text>
+                    <Text>Local: {item.local}</Text>
+                    <Text>Quantidade: {item.quantidade}</Text>
+                    <Text>Quantidade litros: {item.quatidade_litros}</Text>
+                  
+                  </>
+                );
+              }}
+            />
 
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={save}
             >
-              <Text style={styles.textStyle}>Salvar</Text>
+              <Text style={styles.textStyle} onPress={() => setModalVisible(false)}>Ver Menos</Text>
             </Pressable>
           </View>
         </View>
@@ -105,20 +125,27 @@ const Pedido = ({ navigation }) => {
 
       <FlatList
         data={allPedidos}
-        keyExtractor={item => item.id} 
+        keyExtractor={(item) => item.id}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({ item }) => {
           return (
             <>
               <Text>Id: {item.id}</Text>
-              <Text>Tipo: {item.tipo}</Text>
-              <Text>Nome: {item.nome}</Text>
+              <Text>
+                Valor: {item.valor !== null ? item.valor : "Pendente"}
+              </Text>
+              <Text>Nome: {item.data}</Text>
+              <Text>Data Pagamento: {item.data_pagamento}</Text>
               <Text>Ativo: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
-              <Button title="-" onPress={() => deleteServico(item.id)} />
-              {/* <TouchableHighlight onPress={deleteServico(item.id)}>
+              <Button title="-" onPress={() => deletePedido(item.id)} />
+
+              <TouchableHighlight onPress={() => getItensPedido(item.id)}>
                 <View style={styles.button}>
-                  <Text>Touch Here</Text>
+                  <Text>Mais</Text>
                 </View>
-              </TouchableHighlight> */}
+              </TouchableHighlight>
             </>
           );
         }}

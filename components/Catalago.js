@@ -32,7 +32,7 @@ const Catalago = ({ navigation }) => {
   const [formFormaPagamento, setFormFormaPagamento] = useState("");
   const [formQTDLitros, setFormQTDLitros] = useState(0);
   const [date, setDate] = useState(new Date());
-  const [idServicos, setIdServicos] = useState(0);
+  const [servico, setServico] = useState([]);
   const [itens, setItens] = useState([])
 
   useEffect(() => {
@@ -48,9 +48,11 @@ const Catalago = ({ navigation }) => {
 
   const itemPage = async () => {
     try {
+    
       let newItens = itens 
       newItens.push({
-          id_servico: idServicos,
+          id_servico: servico.id,
+          no_servico: servico.nome,
           local: formLocal,
           date: dateForm,
           hora: formHora,
@@ -59,43 +61,8 @@ const Catalago = ({ navigation }) => {
         })
         setItens(newItens)
         console.log(itens);
-      // await sessionStorage.get("item_servico") !== undefined
-      // console.log(itens);
+        setModalVisible(false);
 
-      // itens.push(await JSON.parse(await sessionStorage.get("item_servico")));
-      // console.log(itens);
-      // itens.push(
-      //   // JSON.stringify({
-      //   //   local: formLocal,
-      //   //   date: dateForm,
-      //   //   hora: formHora,
-      //   //   forma_pagamento: formFormaPagamento,
-      //   //   quantidade_litros: formQTDLitros,
-      //   // })
-      // );
-      // await sessionStorage.removeItem("item_servico");
-
-      // const value = await sessionStorage.setItem(
-      //   "item_servico",
-      //   JSON.stringify({
-      //     local: formLocal,
-      //     date: dateForm,
-      //     hora: formHora,
-      //     forma_pagamento: formFormaPagamento,
-      //     quantidade_litros: formQTDLitros,
-      //   })
-      // );
-
-      setModalVisible(false);
-      // navigation.navigate("FinalizaServico", {
-      //   paramKey: {
-      //     local: formLocal,
-      //     date: dateForm,
-      //     hora: formHora,
-      //     forma_pagamento: formFormaPagamento,
-      //     quantidade_litros: formQTDLitros,
-      //   },
-      // });
 
     } catch (e) {
       console.log(e);
@@ -115,9 +82,9 @@ const Catalago = ({ navigation }) => {
     navigation.navigate("FinalizaServico")
   }
 
-  const openForm = async (id) => {
+  const openForm = async (item) => {
     setModalVisible(true);
-    setIdServicos(id);
+    setServico(item);
   };
 
   return (
@@ -192,7 +159,7 @@ const Catalago = ({ navigation }) => {
 
               <Button
                 title="Solicitar Serviço"
-                onPress={() => openForm(item.id)}
+                onPress={() => openForm(item)}
               />
               {/* <TouchableHighlight onPress={deleteServico(item.id)}>
                 <View style={styles.button}>

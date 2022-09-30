@@ -71,8 +71,11 @@ const Pedido = ({ navigation }) => {
  
   };
 
+  
+
   const getItensPedido = async (id) => {
     const get = await api.get(`/pedido/itens?id=${id}`);
+    console.log(id);
     setAllItens(get.data)
     setModalVisible(!modalVisible);
   };
@@ -99,7 +102,6 @@ const Pedido = ({ navigation }) => {
               renderItem={({ item }) => {
                 return (
                   <>
-                    <Text>Serviço: {item.no_servico}</Text>
                     <Text>Codigo: {item.id}</Text>
                     <Text>Data Inicio: {item.data_inicio}</Text>
                     <Text>Data Termino: {item.data_termino}</Text>
@@ -107,6 +109,7 @@ const Pedido = ({ navigation }) => {
                     <Text>Local: {item.local}</Text>
                     <Text>Quantidade: {item.quantidade}</Text>
                     <Text>Quantidade litros: {item.quatidade_litros}</Text>
+                    <Text>Serviço: {item.no_servico}</Text>
                   
                   </>
                 );

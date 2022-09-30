@@ -1,12 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { View, Text,FlatList, DevSettings, RefreshControl, Button } from "react-native";
+import { View, FlatList, DevSettings, RefreshControl } from "react-native";
+import {Button, Text } from 'react-native-paper';
 import sessionStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import api from "../api/ApiService.js";
 
-const FinalizaServico = ({ navigation }) => {
+const FinalizaServico = ( navigation ) => {
   const [allItens, setAllItens] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const getItemsServicos = async () => {
@@ -27,22 +29,22 @@ const FinalizaServico = ({ navigation }) => {
       itens: 
         allItens
     }    
-    console.log(createPedido)
     const post = await api.post("/pedido", createPedido);
 
     await sessionStorage.setItem("item_servico",JSON.stringify([]));
-console.log(post.data);
-    navigation.navigate("Home")
+    navigation.jumpTo('pedidos')
   };
 
   const onRefresh = () => {
     setRefreshing(false);
     getItemsServicos();
+    console.log(allItens);
   }
   
 
   return (
     <SafeAreaView>
+      <Button onPress={() => onRefresh()} ><FontAwesome color="#03a9f4" size={22}  name='retweet' /></Button>
       <Text>Itens do carrinho:
         {allItens.length}
       </Text>
@@ -69,7 +71,7 @@ console.log(post.data);
         }}
       />
 
-      <Button title="Finalizar Serviço" onPress={() => save()}/>
+      <Button disabled={allItens.length > 0 ?  false : true } onPress={() => save()}> Finalizar Serviço</Button>
       
 
     </SafeAreaView>

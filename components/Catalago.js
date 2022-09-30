@@ -23,7 +23,7 @@ import sessionStorage from "@react-native-async-storage/async-storage";
 import api from "../api/ApiService.js";
 import { set } from "react-native-reanimated";
 
-const Catalago = ({ navigation }) => {
+const Catalago = ( navigation, Test ) => {
   const [allServicos, setAllServicos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [dateForm, setDateForm] = useState(new Date());
@@ -31,7 +31,6 @@ const Catalago = ({ navigation }) => {
   const [formHora, setFormHora] = useState("");
   const [formFormaPagamento, setFormFormaPagamento] = useState("");
   const [formQTDLitros, setFormQTDLitros] = useState(0);
-  const [date, setDate] = useState(new Date());
   const [servico, setServico] = useState([]);
   const [itens, setItens] = useState([])
 
@@ -79,7 +78,8 @@ const Catalago = ({ navigation }) => {
 
     }
     data();
-    navigation.navigate("FinalizaServico")
+    navigation.jumpTo('recentes')
+    // navigation.navigate("FinalizaServico")
   }
 
   const openForm = async (item) => {
@@ -90,6 +90,7 @@ const Catalago = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.centeredView}>
       <Button title="Finalizar pedido:" onPress={()=> finish()}> </Button>
+
       <Modal
         animationType="slide"
         transparent={true}

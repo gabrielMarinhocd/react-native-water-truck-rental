@@ -1,22 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  TextField,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  Image,
-  Button,
-  SafeAreaView,
-} from "react-native";
+import {  View,  Text,  Modal,  TextField,  TextInput,  TouchableOpacity,  TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,} from "react-native";
 import api from "../api/ApiService.js";
-
+0
 const Cliente = ({ navigation }) => {
   const [allClientes, setAllClientes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);

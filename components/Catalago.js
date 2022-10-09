@@ -1,20 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  TextField,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  Image,
-  Button,
-  SafeAreaView,
-} from "react-native";
+import {  View,  Text,  Modal,  TextField,  TextInput,  TouchableOpacity,  TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,} from "react-native";
 // import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import DateField from "react-native-datefield";
@@ -23,7 +9,7 @@ import sessionStorage from "@react-native-async-storage/async-storage";
 import api from "../api/ApiService.js";
 import { set } from "react-native-reanimated";
 
-const Catalago = ( navigation, Test ) => {
+const Catalago = (navigation, Test) => {
   const [allServicos, setAllServicos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [dateForm, setDateForm] = useState(new Date());
@@ -32,7 +18,10 @@ const Catalago = ( navigation, Test ) => {
   const [formFormaPagamento, setFormFormaPagamento] = useState("");
   const [formQTDLitros, setFormQTDLitros] = useState(0);
   const [servico, setServico] = useState([]);
-  const [itens, setItens] = useState([])
+  const [itens, setItens] = useState([]);
+  const [formQuantidade, setFormQuantidade] = useState([]);
+  const [formDataInicio, setFormDataInicio] = useState([])
+  const [dateFormTermino, setDateFormTermino] = useState(new Date())
 
   useEffect(() => {
     const getServicos = async () => {
@@ -47,40 +36,41 @@ const Catalago = ( navigation, Test ) => {
 
   const itemPage = async () => {
     try {
-    
-      let newItens = itens 
+      let newItens = itens;
       newItens.push({
-          id_servico: servico.id,
-          no_servico: servico.nome,
-          local: formLocal,
-          date: dateForm,
-          hora: formHora,
-          forma_pagamento: formFormaPagamento,
-          quantidade_litros: formQTDLitros,
-        })
-        setItens(newItens)
-        console.log(itens);
-        setModalVisible(false);
+        id_servico: servico.id,
+        no_servico: servico.nome,
+        local: formLocal,
+        date: dateForm,
+        hora: formHora,
+        forma_pagamento: formFormaPagamento,
+        quantidade_litros: formQTDLitros,
+        quantidade: formQuantidade,
+        data_termino: dateFormTermino,
 
-
+      });
+      setItens(newItens);
+      setModalVisible(false);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const finish = () =>{
-    const data = async() => {
+  const finish = () => {
+    const data = async () => {
       try {
-        return await sessionStorage.setItem("item_servico",JSON.stringify(itens));
+        return await sessionStorage.setItem(
+          "item_servico",
+          JSON.stringify(itens)
+        );
       } catch (error) {
-        return error
+        return error;
       }
-
-    }
+    };
     data();
-    navigation.jumpTo('recentes')
+    navigation.jumpTo("recentes");
     // navigation.navigate("FinalizaServico")
-  }
+  };
 
   const openForm = async (item) => {
     setModalVisible(true);
@@ -89,7 +79,9 @@ const Catalago = ( navigation, Test ) => {
 
   return (
     <SafeAreaView style={styles.centeredView}>
-      <Button title="Finalizar pedido:" onPress={()=> finish()}> </Button>
+      <Button title="Finalizar pedido:" onPress={() => finish()}>
+        {" "}
+      </Button>
 
       <Modal
         animationType="slide"
@@ -115,6 +107,12 @@ const Catalago = ( navigation, Test ) => {
                 styleInput={{ fontSize: 15 }}
                 onSubmit={(value) => setDateForm(value)}
               />
+              <DateField
+                disabled
+                defaultValue={dateFormTermino}
+                styleInput={{ fontSize: 15 }}
+                onSubmit={(value) => setDateFormTermino(value)}
+              />
               {/* <DateTimePicker
                   value={date}
                 /> */}
@@ -132,6 +130,11 @@ const Catalago = ( navigation, Test ) => {
                 placeholder="QTDLitros:"
                 onChangeText={setFormQTDLitros}
                 value={formQTDLitros}
+              />
+              <TextInput
+                placeholder="Quantidade:"
+                onChangeText={setFormQuantidade}
+                value={formQuantidade}
               />
             </>
 

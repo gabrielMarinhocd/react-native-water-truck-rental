@@ -61,7 +61,8 @@ const FinalizaServico = ( navigation ) => {
           return (
             <>
               <Text>Local: {item.local}</Text>
-              <Text>Data: {item.date}</Text>
+              <Text>Data Inicio: {item.date}</Text>
+              <Text>Data Termino: {item.data_termino}</Text>
               <Text>Forma Pagamento: {item.forma_pagamento}</Text>
               <Text>Hora: {item.hora}</Text>
               <Text>Listros: {item.quantidade_litros}</Text>

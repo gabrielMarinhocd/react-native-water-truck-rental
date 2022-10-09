@@ -1,47 +1,17 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  TextField,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  Image,
-  Button,
-  SafeAreaView,
-  RefreshControl,
-} from "react-native";
-
+import {  View,  Text,  Modal,  TextField,  TextInput,  TouchableOpacity,  TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,  RefreshControl,} from "react-native";
 import api from "../api/ApiService.js";
 
 const Pedido = ({ navigation }) => {
   const [allPedidos, setAllPedidos] = useState([]);
   const [allItens, setAllItens] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
   const [refreshing, setRefreshing] = useState(false);
 
   const getPedidos = async () => {
     const Pedidos = await api.get("/Pedido");
     setAllPedidos(Pedidos.data);
-  };
-
-  const save = async () => {
-    const createPedido = {
-      tipo: formTipo,
-      nome: formNome,
-    };
-
-    const post = await api.post("/pedido", createPedido);
-    const data = allPedidos;
-    data.push(post.data[0]);
-
-    setModalVisible(!modalVisible);
   };
 
   useEffect(() => {
@@ -71,7 +41,6 @@ const Pedido = ({ navigation }) => {
  
   };
 
-  
 
   const getItensPedido = async (id) => {
     const get = await api.get(`/pedido/itens?id=${id}`);
@@ -118,7 +87,6 @@ const Pedido = ({ navigation }) => {
 
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={save}
             >
               <Text style={styles.textStyle} onPress={() => setModalVisible(false)}>Ver Menos</Text>
             </Pressable>

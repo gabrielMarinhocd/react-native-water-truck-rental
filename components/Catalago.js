@@ -1,13 +1,20 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal,  TextField,  TextInput,  TouchableOpacity,  TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,} from "react-native";
-// import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-// import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
+import { Card, Button, TextInput } from "react-native-paper";
 import DateField from "react-native-datefield";
 
 import sessionStorage from "@react-native-async-storage/async-storage";
 import api from "../api/ApiService.js";
-import { set } from "react-native-reanimated";
+import { color, set } from "react-native-reanimated";
 
 const Catalago = (navigation, Test) => {
   const [allServicos, setAllServicos] = useState([]);
@@ -20,8 +27,7 @@ const Catalago = (navigation, Test) => {
   const [servico, setServico] = useState([]);
   const [itens, setItens] = useState([]);
   const [formQuantidade, setFormQuantidade] = useState([]);
-  const [formDataInicio, setFormDataInicio] = useState([])
-  const [dateFormTermino, setDateFormTermino] = useState(new Date())
+  const [dateFormTermino, setDateFormTermino] = useState(new Date());
 
   useEffect(() => {
     const getServicos = async () => {
@@ -47,7 +53,6 @@ const Catalago = (navigation, Test) => {
         quantidade_litros: formQTDLitros,
         quantidade: formQuantidade,
         data_termino: dateFormTermino,
-
       });
       setItens(newItens);
       setModalVisible(false);
@@ -78,11 +83,40 @@ const Catalago = (navigation, Test) => {
   };
 
   return (
-    <SafeAreaView style={styles.centeredView}>
-      <Button title="Finalizar pedido:" onPress={() => finish()}>
-        {" "}
+    <SafeAreaView>
+      <Button mode="contained" onPress={() => finish()}>
+        Finalizar pedido:
       </Button>
 
+      <View>
+        <TextInput
+          style={{ textAlign: "center", margin: 15 }}
+          value="Distrito Federal"
+          editable={false}
+        />
+      </View>
+      <FlatList
+        data={allServicos}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.container}>
+              <View style={styles.row}>
+                <Text style={styles.titleStyle}>{item.nome}</Text>
+                <Text style={styles.textContent}> lorem ipsom lorem ipsom</Text>
+                <Button
+                  style={styles.button}
+                  mode="contained"
+                  onPress={() => openForm(item)}
+                >
+                  Solicitar
+                </Button>
+              </View>
+            </View>
+          );
+        }}
+      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -93,116 +127,128 @@ const Catalago = (navigation, Test) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Cadastrar:</Text>
+            <Text style={styles.modalText}>Preencha os campos e clique em proximo.</Text>
 
             <>
               <TextInput
-                placeholder="Local:"
+                mode="outlined"
+                label="Local"
                 onChangeText={setFormLocal}
-                value={formLocal}
+      
               />
               <DateField
                 disabled
-                defaultValue={dateForm}
+
                 styleInput={{ fontSize: 15 }}
                 onSubmit={(value) => setDateForm(value)}
               />
               <DateField
                 disabled
-                defaultValue={dateFormTermino}
-                styleInput={{ fontSize: 15 }}
+                     styleInput={{ fontSize: 15 }}
                 onSubmit={(value) => setDateFormTermino(value)}
               />
               {/* <DateTimePicker
                   value={date}
                 /> */}
               <TextInput
-                placeholder="Hora:"
+                mode="outlined"
+                label="Hora:"
                 onChangeText={setFormHora}
-                value={formHora}
+
               />
               <TextInput
-                placeholder="FormaPagamento:"
+                mode="outlined"
+                label="FormaPagamento:"
                 onChangeText={setFormFormaPagamento}
-                value={formFormaPagamento}
+
               />
               <TextInput
-                placeholder="QTDLitros:"
+                mode="outlined"
+                label="QTDLitros:"
                 onChangeText={setFormQTDLitros}
-                value={formQTDLitros}
+
               />
               <TextInput
-                placeholder="Quantidade:"
+                mode="outlined"
+                label="Quantidade:"
                 onChangeText={setFormQuantidade}
-                value={formQuantidade}
+
               />
             </>
-
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => itemPage()}
-            >
-              <Text style={styles.textStyle}>Salvar</Text>
-            </Pressable>
+            <View>
+              <View style={styles.alingButton}>
+                <Button
+                  style={{marginTop: 25, marginLeft: 15}}
+                  mode="contained"
+                  onPress={() => itemPage()}
+                >
+                  Proximo
+                </Button>
+                <Button
+                style={{marginTop: 25, marginRight: 15, backgroundColor: 'red'}}
+                  mode="contained"
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  Cancelar
+                </Button>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
-
-      <View>
-        <TextInput value="Distrito Federal" editable={false} />
-      </View>
-      <FlatList
-        data={allServicos}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          return (
-            <>
-              <Text>Nome: {item.nome}</Text>
-              <Text>Tipo: {item.tipo}</Text>
-              <Text>Descrição: lorem ipsom lorem ipsom</Text>
-
-              <Button
-                title="Solicitar Serviço"
-                onPress={() => openForm(item)}
-              />
-              {/* <TouchableHighlight onPress={deleteServico(item.id)}>
-                <View style={styles.button}>
-                  <Text>Touch Here</Text>
-                </View>
-              </TouchableHighlight> */}
-            </>
-          );
-        }}
-      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
+  container: {
+    width: 400,
+    flex: 2,
+    marginTop: 8,
+    margin: 8,
+    backgroundColor: "aliceblue",
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    textAlign: "center",
+  },
+  row: {
+    padding: 10,
+    textAlign: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  textContent: {
+    padding: 10,
+    fontSize: 12,
+    color: "#737373",
+  },
+  titleStyle: {
+    padding: 10,
+    marginLeft: 30,
+    color: "#03a9f4",
+    fontSize: 18,
+    textAlign: "center",
   },
   modalView: {
-    margin: 10,
+    marginTop: 100,
+    margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 100,
-    alignItems: "center",
+    width: 350,
+    padding: 30,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
+      width: 200,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
+    alignContent: "center",
+    textAlign: "center",
+    padding: 0,
+    width: 150,
     elevation: 2,
   },
   buttonOpen: {
@@ -211,13 +257,15 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#2196F3",
   },
-  textStyle: {
-    color: "white",
-    textAlign: "center",
-  },
+
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  alingButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    
   },
 });
 

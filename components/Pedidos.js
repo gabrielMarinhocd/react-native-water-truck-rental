@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal,  TextField,  TextInput,  TouchableOpacity,  TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,  RefreshControl,} from "react-native";
+import {  View,  Text,  Modal, TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,  RefreshControl,} from "react-native";
 import api from "../api/ApiService.js";
 
 const Pedido = ({ navigation }) => {
@@ -40,7 +40,6 @@ const Pedido = ({ navigation }) => {
     getPedidos();
  
   };
-
 
   const getItensPedido = async (id) => {
     const get = await api.get(`/pedido/itens?id=${id}`);

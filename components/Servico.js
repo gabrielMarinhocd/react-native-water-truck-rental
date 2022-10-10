@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal,  TextField,  TextInput,  TouchableOpacity,  TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,} from "react-native";
+import {  View,  Text,  Modal, TextInput,   StyleSheet,  Pressable,  FlatList,  Button,  SafeAreaView,} from "react-native";
 import api from "../api/ApiService.js";
 
 const Servico = ({ navigation }) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { View, FlatList, DevSettings, RefreshControl } from "react-native";
-import { Button, Text, Card, Title,Paragraph } from "react-native-paper";
+import { Button, Text, Card, Title, Paragraph } from "react-native-paper";
 import sessionStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -36,10 +36,22 @@ const FinalizaServico = (navigation) => {
     console.log(allItens);
   };
 
-  return (
-    <SafeAreaView style={{marginBottom:100}}>
-     
+  const deleteItem = async (id) => {
+    const newData = Object.assign([], allItens);
+    const deleteItemIndex = allItens.findIndex((data) => data == id);
+    newData.splice(deleteItemIndex, 1);
+    
+    try {
+      await sessionStorage.setItem("item_servico", JSON.stringify(newData));
+      setAllItens(newData);
+    } catch (error) {
+      return error;
+    }
+    
+  };
 
+  return (
+    <SafeAreaView style={{ marginBottom: 100 }}>
       <Button onPress={() => onRefresh()}>
         <FontAwesome color="#03a9f4" size={22} name="retweet" />
       </Button>
@@ -51,7 +63,7 @@ const FinalizaServico = (navigation) => {
         {" "}
         Finalizar Serviço
       </Button>
-      <Title style={{textAlign:"center"}}>
+      <Title style={{ textAlign: "center" }}>
         Itens do carrinho:
         {allItens.length}
       </Title>
@@ -63,28 +75,20 @@ const FinalizaServico = (navigation) => {
         }
         renderItem={({ item }) => {
           return (
-
             <Card>
-            <Card.Content>
-              <Title>{item.no_servico}</Title>
-              <Paragraph> Local: {item.local}</Paragraph>
-              <Paragraph> Data Inicio: {item.date}</Paragraph>
-              <Paragraph> Data Termino: {item.data_termino}</Paragraph>
-              <Paragraph> Forma Pagamento: {item.forma_pagamento}</Paragraph>
-              <Paragraph> Listros: {item.quantidade_litros}</Paragraph>
-
-            </Card.Content>
-          </Card>
-
-            // <>
-            //  <Text>Local: {item.no_servico}</Text>
-            //   <Text>Local: {item.local}</Text>
-            //   <Text>Data Inicio: {item.date}</Text>
-            //   <Text>Data Termino: {item.data_termino}</Text>
-            //   <Text>Forma Pagamento: {item.forma_pagamento}</Text>
-            //   <Text>Hora: {item.hora}</Text>
-            //   <Text>Listros: {item.quantidade_litros}</Text>
-            // </>
+              <Card.Content>
+                <Title>{item.no_servico}</Title>
+                <Paragraph> Local: {item.local}</Paragraph>
+                <Paragraph> Data Inicio: {item.date}</Paragraph>
+                <Paragraph> Data Termino: {item.data_termino}</Paragraph>
+                <Paragraph> Forma Pagamento: {item.forma_pagamento}</Paragraph>
+                <Paragraph> Listros: {item.quantidade_litros}</Paragraph>
+                <Button onPress={() => deleteItem()}>
+                  {" "}
+                  <FontAwesome color="#03a9f4" size={22} name="trash" />
+                </Button>
+              </Card.Content>
+            </Card>
           );
         }}
       />

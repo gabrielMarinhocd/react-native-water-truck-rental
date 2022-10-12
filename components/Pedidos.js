@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal, TouchableHighlight,  StyleSheet,  Pressable,  FlatList,  Image,  Button,  SafeAreaView,  RefreshControl,} from "react-native";
+import {  View,  Text,  Modal, TouchableHighlight,  StyleSheet,  Pressable,  FlatList,   Button,  SafeAreaView,  RefreshControl,} from "react-native";
 import api from "../api/ApiService.js";
 
 const Pedido = ({ navigation }) => {
@@ -78,7 +78,6 @@ const Pedido = ({ navigation }) => {
                     <Text>Quantidade: {item.quantidade}</Text>
                     <Text>Quantidade litros: {item.quatidade_litros}</Text>
                     <Text>Serviço: {item.no_servico}</Text>
-                  
                   </>
                 );
               }}

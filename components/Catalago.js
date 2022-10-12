@@ -73,6 +73,7 @@ const Catalago = (navigation, Test) => {
       }
     };
     data();
+    setItens([])
     navigation.jumpTo("recentes");
     // navigation.navigate("FinalizaServico")
   };
@@ -82,10 +83,11 @@ const Catalago = (navigation, Test) => {
     setServico(item);
   };
 
+  console.log(itens);
   return (
     <SafeAreaView>
-      <Button mode="contained" onPress={() => finish()}>
-        Finalizar pedido:
+      <Button mode="contained" disabled={itens.length > 0 ? false : true} onPress={() => finish()}>
+        Finalizar pedido
       </Button>
 
       <View>

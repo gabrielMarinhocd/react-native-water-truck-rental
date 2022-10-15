@@ -78,7 +78,7 @@ const Pedido = ({ navigation }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Title style={styles.modalText}>Lista de Itens:</Title>
+            <Title style={styles.modalText}>Itens do Pedido:</Title>
             <FlatList
               data={allItens}
               keyExtractor={(item) => item.id}
@@ -87,24 +87,22 @@ const Pedido = ({ navigation }) => {
               }
               renderItem={({ item }) => {
                 return (
-                  
-                    <Card>
-                      <Card.Content>
-                        <Title>Codigo: {item.id}</Title>
-                        <Paragraph>Data Inicio: {item.data_inicio}</Paragraph>
-                        <Paragraph>Data Termino: {item.data_termino}</Paragraph>
-                        <Paragraph>
-                          Forma Pagamento: {item.forma_pagamento}
-                        </Paragraph>
-                        <Paragraph>Local: {item.local}</Paragraph>
-                        <Paragraph>Quantidade: {item.quantidade}</Paragraph>
-                        <Paragraph>
-                          Quantidade litros: {item.quatidade_litros}
-                        </Paragraph>
-                        <Paragraph>Serviço: {item.no_servico}</Paragraph>
-                      </Card.Content>
-                    </Card>
-                  
+                  <Card>
+                    <Card.Content>
+                      <Title>Codigo: {item.id}</Title>
+                      <Paragraph>Serviço: {item.no_servico}</Paragraph>
+                      <Paragraph>Data Inicio: {item.data_inicio}</Paragraph>
+                      <Paragraph>Data Termino: {item.data_termino}</Paragraph>
+                      <Paragraph>
+                        Forma Pagamento: {item.forma_pagamento}
+                      </Paragraph>
+                      <Paragraph>Local: {item.local}</Paragraph>
+                      <Paragraph>Quantidade: {item.quantidade}</Paragraph>
+                      <Paragraph>
+                        Quantidade litros: {item.quatidade_litros}
+                      </Paragraph>
+                    </Card.Content>
+                  </Card>
                 );
               }}
             />
@@ -113,7 +111,7 @@ const Pedido = ({ navigation }) => {
               onPress={() => setModalVisible(false)}
               style={styles.seeMore}
             >
-              Ver Mais
+              Ver Menos
             </Button>
           </View>
         </View>
@@ -133,13 +131,29 @@ const Pedido = ({ navigation }) => {
                 <Paragraph>Data de Inicio: {item.date}</Paragraph>
                 <Paragraph>Data Termino: {item.data_termino}</Paragraph>
                 <Paragraph>Data Pagamento: {item.data_pagamento}</Paragraph>
-                <Button
-                  mode="contained"
-                  onPress={() => getItensPedido(item.id)}
-                  style={styles.seeMore}
-                >
-                  Ver Mais
-                </Button>
+                <View>
+                  <View style={styles.alingButton}>
+                    <Button
+                      style={{ marginTop: 25, marginLeft: 50 }}
+                      mode="contained"
+                      onPress={() => setModalVisible(!modalVisible)}
+                    >
+                      Ver mais
+                    </Button>
+                    <Button
+                      style={{
+                        marginTop: 25,
+                        marginRight: 50,
+                        backgroundColor: "red",
+                      }}
+                      mode="contained"
+                      onPress={() => deletePedido(item.id)}
+                    >
+                      Cancelar
+                    </Button>
+                  </View>
+                </View>
+              
               </View>
             </View>
           );
@@ -150,6 +164,10 @@ const Pedido = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  alingButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   listItem: {
     color: "blue",
     with: 100,
@@ -169,9 +187,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   centeredView: {
-    margin: 25,
-    marginTop: 55,
-    marginBottom: 230,
+    margin: 30,
+    marginTop: 100,
+    marginBottom: 300,
   },
   modalView: {
     backgroundColor: "white",

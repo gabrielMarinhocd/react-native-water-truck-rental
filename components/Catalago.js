@@ -73,7 +73,7 @@ const Catalago = (navigation, Test) => {
       }
     };
     data();
-    setItens([])
+    setItens([]);
     navigation.jumpTo("recentes");
     // navigation.navigate("FinalizaServico")
   };
@@ -86,7 +86,11 @@ const Catalago = (navigation, Test) => {
   console.log(itens);
   return (
     <SafeAreaView>
-      <Button mode="contained" disabled={itens.length > 0 ? false : true} onPress={() => finish()}>
+      <Button
+        mode="contained"
+        disabled={itens.length > 0 ? false : true}
+        onPress={() => finish()}
+      >
         Finalizar pedido
       </Button>
 
@@ -129,24 +133,26 @@ const Catalago = (navigation, Test) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Preencha os campos e clique em proximo.</Text>
+            <Text style={styles.modalText}>
+              Preencha os campos e clique em proximo.
+            </Text>
 
             <>
               <TextInput
                 mode="outlined"
                 label="Local"
                 onChangeText={setFormLocal}
-      
               />
+              <Text style={styles.label}>Data Inicio:</Text>
               <DateField
                 disabled
-
                 styleInput={{ fontSize: 15 }}
                 onSubmit={(value) => setDateForm(value)}
               />
+              <Text style={styles.label}>Data Termino:</Text>
               <DateField
                 disabled
-                     styleInput={{ fontSize: 15 }}
+                styleInput={{ fontSize: 15 }}
                 onSubmit={(value) => setDateFormTermino(value)}
               />
               {/* <DateTimePicker
@@ -156,38 +162,38 @@ const Catalago = (navigation, Test) => {
                 mode="outlined"
                 label="Hora:"
                 onChangeText={setFormHora}
-
               />
               <TextInput
                 mode="outlined"
                 label="FormaPagamento:"
                 onChangeText={setFormFormaPagamento}
-
               />
               <TextInput
                 mode="outlined"
                 label="QTDLitros:"
                 onChangeText={setFormQTDLitros}
-
               />
               <TextInput
                 mode="outlined"
                 label="Quantidade:"
                 onChangeText={setFormQuantidade}
-
               />
             </>
             <View>
               <View style={styles.alingButton}>
                 <Button
-                  style={{marginTop: 25, marginLeft: 15}}
+                  style={{ marginTop: 25, marginLeft: 15 }}
                   mode="contained"
                   onPress={() => itemPage()}
                 >
                   Proximo
                 </Button>
                 <Button
-                style={{marginTop: 25, marginRight: 15, backgroundColor: 'red'}}
+                  style={{
+                    marginTop: 25,
+                    marginRight: 15,
+                    backgroundColor: "red",
+                  }}
                   mode="contained"
                   onPress={() => setModalVisible(!modalVisible)}
                 >
@@ -212,6 +218,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     textAlign: "center",
+  },
+  label: {
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   row: {
     padding: 10,
@@ -267,7 +277,6 @@ const styles = StyleSheet.create({
   alingButton: {
     flexDirection: "row",
     justifyContent: "space-between",
-    
   },
 });
 

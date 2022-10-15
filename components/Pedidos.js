@@ -1,7 +1,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal, TouchableHighlight,  StyleSheet,  Pressable,  FlatList,   Button,  SafeAreaView,  RefreshControl,} from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  SafeAreaView,
+  RefreshControl,
+} from "react-native";
+import {
+  Card,
+  Button,
+  TextInput,
+  List,
+  Title,
+  Paragraph,
+} from "react-native-paper";
 import api from "../api/ApiService.js";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const Pedido = ({ navigation }) => {
   const [allPedidos, setAllPedidos] = useState([]);
@@ -17,10 +35,8 @@ const Pedido = ({ navigation }) => {
   useEffect(() => {
     if (allPedidos.length === 0) {
       getPedidos();
-
     }
   }, []);
-
 
   const deletePedido = async (id) => {
     const isDelete = await api.delete(`/pedido?id=${id}`);
@@ -38,19 +54,21 @@ const Pedido = ({ navigation }) => {
   const onRefresh = () => {
     setRefreshing(false);
     getPedidos();
- 
   };
 
   const getItensPedido = async (id) => {
     const get = await api.get(`/pedido/itens?id=${id}`);
     console.log(id);
-    setAllItens(get.data)
+    setAllItens(get.data);
+
     setModalVisible(!modalVisible);
   };
+  console.log(allPedidos);
 
   return (
-    <SafeAreaView style={styles.centeredView}>
+    <SafeAreaView>
       <Modal
+        style={styles.centeredView}
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -60,7 +78,7 @@ const Pedido = ({ navigation }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Lista de Itens:</Text>
+            <Title style={styles.modalText}>Lista de Itens:</Title>
             <FlatList
               data={allItens}
               keyExtractor={(item) => item.id}
@@ -69,25 +87,34 @@ const Pedido = ({ navigation }) => {
               }
               renderItem={({ item }) => {
                 return (
-                  <>
-                    <Text>Codigo: {item.id}</Text>
-                    <Text>Data Inicio: {item.data_inicio}</Text>
-                    <Text>Data Termino: {item.data_termino}</Text>
-                    <Text>Forma Pagamento: {item.forma_pagamento}</Text>
-                    <Text>Local: {item.local}</Text>
-                    <Text>Quantidade: {item.quantidade}</Text>
-                    <Text>Quantidade litros: {item.quatidade_litros}</Text>
-                    <Text>Serviço: {item.no_servico}</Text>
-                  </>
+                  
+                    <Card>
+                      <Card.Content>
+                        <Title>Codigo: {item.id}</Title>
+                        <Paragraph>Data Inicio: {item.data_inicio}</Paragraph>
+                        <Paragraph>Data Termino: {item.data_termino}</Paragraph>
+                        <Paragraph>
+                          Forma Pagamento: {item.forma_pagamento}
+                        </Paragraph>
+                        <Paragraph>Local: {item.local}</Paragraph>
+                        <Paragraph>Quantidade: {item.quantidade}</Paragraph>
+                        <Paragraph>
+                          Quantidade litros: {item.quatidade_litros}
+                        </Paragraph>
+                        <Paragraph>Serviço: {item.no_servico}</Paragraph>
+                      </Card.Content>
+                    </Card>
+                  
                 );
               }}
             />
-
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
+            <Button
+              mode="contained"
+              onPress={() => setModalVisible(false)}
+              style={styles.seeMore}
             >
-              <Text style={styles.textStyle} onPress={() => setModalVisible(false)}>Ver Menos</Text>
-            </Pressable>
+              Ver Mais
+            </Button>
           </View>
         </View>
       </Modal>
@@ -100,22 +127,21 @@ const Pedido = ({ navigation }) => {
         }
         renderItem={({ item }) => {
           return (
-            <>
-              <Text>Id: {item.id}</Text>
-              <Text>
-                Valor: {item.valor !== null ? item.valor : "Pendente"}
-              </Text>
-              <Text>Nome: {item.data}</Text>
-              <Text>Data Pagamento: {item.data_pagamento}</Text>
-              <Text>Ativo: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
-              <Button title="-" onPress={() => deletePedido(item.id)} />
-
-              <TouchableHighlight onPress={() => getItensPedido(item.id)}>
-                <View style={styles.button}>
-                  <Text>Mais</Text>
-                </View>
-              </TouchableHighlight>
-            </>
+            <View style={styles.listItem}>
+              <Title style={styles.titleStyle}>Pedido {item.id}</Title>
+              <View>
+                <Paragraph>Data de Inicio: {item.date}</Paragraph>
+                <Paragraph>Data Termino: {item.data_termino}</Paragraph>
+                <Paragraph>Data Pagamento: {item.data_pagamento}</Paragraph>
+                <Button
+                  mode="contained"
+                  onPress={() => getItensPedido(item.id)}
+                  style={styles.seeMore}
+                >
+                  Ver Mais
+                </Button>
+              </View>
+            </View>
           );
         }}
       />
@@ -124,18 +150,34 @@ const Pedido = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  listItem: {
+    color: "blue",
+    with: 100,
+    backgroundColor: "whitesmoke",
+    padding: 10,
+    margin: 20,
+    borderRadius: 10,
+  },
+  seeMore: {
     marginTop: 10,
+    marginLeft: 50,
+    marginRight: 50,
+  },
+  titleStyle: {
+    color: "#03a9f4",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  centeredView: {
+    margin: 25,
+    marginTop: 55,
+    marginBottom: 230,
   },
   modalView: {
-    margin: 10,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 100,
     alignItems: "center",
+    padding: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { View, FlatList, DevSettings, RefreshControl } from "react-native";
-import { Button, Text, Card, Title, Paragraph } from "react-native-paper";
+import {  FlatList, RefreshControl } from "react-native";
+import { Button, Card, Title, Paragraph } from "react-native-paper";
 import sessionStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -47,7 +47,7 @@ const FinalizaServico = (navigation) => {
     } catch (error) {
       return error;
     }
-    
+
   };
 
   return (

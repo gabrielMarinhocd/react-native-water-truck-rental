@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {  View,  Text,  Modal,  StyleSheet,  Pressable,  FlatList,  SafeAreaView,  RefreshControl,} from "react-native";
 import {  Card,  Button,  TextInput,  List,  Title,  Paragraph, } from "react-native-paper";
 import api from "../api/ApiService.js";
+import { format } from "date-fns";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const Pedido = ({ navigation }) => {
@@ -15,6 +16,11 @@ const Pedido = ({ navigation }) => {
     const Pedidos = await api.get("/Pedido");
     setAllPedidos(Pedidos.data);
   };
+
+var formattedDate = format(new Date(2014, 1, 11), 'MM/dd/yyyy');
+
+
+console.log(formattedDate);
 
   useEffect(() => {
     if (allPedidos.length === 0) {
@@ -75,8 +81,8 @@ const Pedido = ({ navigation }) => {
                     <Card.Content>
                       <Title>Codigo: {item.id}</Title>
                       <Paragraph>Serviço: {item.no_servico}</Paragraph>
-                      <Paragraph>Data Inicio: {item.data_inicio}</Paragraph>
-                      <Paragraph>Data Termino: {item.data_termino}</Paragraph>
+                      <Paragraph>Data Inicio: {format(Date.parse(item.data_inicio), 'dd/MM/yyyy')}</Paragraph>
+                      <Paragraph>Data Termino: {format(Date.parse(item.data_termino), 'dd/MM/yyyy')}</Paragraph>
                       <Paragraph>
                         Forma Pagamento: {item.forma_pagamento}
                       </Paragraph>
@@ -112,9 +118,7 @@ const Pedido = ({ navigation }) => {
             <View style={styles.listItem}>
               <Title style={styles.titleStyle}>Pedido {item.id}</Title>
               <View>
-                <Paragraph>Data de Inicio: {item.date}</Paragraph>
-                <Paragraph>Data Termino: {item.data_termino}</Paragraph>
-                <Paragraph>Data Pagamento: {item.data_pagamento}</Paragraph>
+                <Paragraph>Data da solicitação: {format(Date.parse(item.date), 'dd/MM/yyyy')}</Paragraph>
                 <View>
                   <View style={styles.alingButton}>
                     <Button

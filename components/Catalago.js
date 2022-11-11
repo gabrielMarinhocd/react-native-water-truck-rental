@@ -110,7 +110,7 @@ const Catalago = (navigation, Test) => {
             <View style={styles.container}>
               <View style={styles.row}>
                 <Text style={styles.titleStyle}>{item.nome}</Text>
-                <Text style={styles.textContent}> lorem ipsom lorem ipsom</Text>
+                <Text style={styles.textContent}> {item.descricao}</Text>
                 <Button
                   style={styles.button}
                   mode="contained"

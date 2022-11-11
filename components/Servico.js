@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal, TextInput,   StyleSheet,  Pressable,  FlatList,  Button,  SafeAreaView,} from "react-native";
+import {  View,  Text,  Modal, TextInput,   StyleSheet,  Pressable,  FlatList,  Button,  SafeAreaView,  RefreshControl} from "react-native";
 import api from "../api/ApiService.js";
 
 const Servico = ({ navigation }) => {
@@ -8,10 +8,14 @@ const Servico = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [formNome, setFormNome] = useState("");
   const [formTipo, setFormTipo] = useState("");
+  const [formDescricao, setFormDescricao] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const save = async () => {
     const createServico = {
       tipo: formTipo,
+      descricao: formDescricao, 
       nome: formNome,
     };
 
@@ -23,16 +27,17 @@ const Servico = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const getServicos = async () => {
-      const Servicos = await api.get("/Servico");
-      setAllServicos(Servicos.data);
-    };
-
     if(allServicos.length === 0){
       getServicos();
     }
     
   }, []);
+
+  const getServicos = async () => {
+    const Servicos = await api.get("/Servico");
+    setAllServicos(Servicos.data);
+  };
+
 
   const deleteServico = async (id) => {
     const isDelete = await api.delete(`/servico?id=${id}`);
@@ -48,6 +53,12 @@ const Servico = ({ navigation }) => {
       setAllServicos(newData)
     }
 
+  };
+
+  
+  const onRefresh = () => {
+    setRefreshing(false);
+    getServicos();
   };
 
   return (
@@ -67,7 +78,7 @@ const Servico = ({ navigation }) => {
 
             <>
               <TextInput
-                placeholder="Tipo:"
+                placeholder="Nome:"
                 onChangeText={setFormNome}
                 value={formNome}
               />
@@ -75,6 +86,11 @@ const Servico = ({ navigation }) => {
                 placeholder="Tipo:"
                 onChangeText={setFormTipo}
                 value={formTipo}
+              />
+                <TextInput
+                placeholder="Descrição:"
+                onChangeText={setFormDescricao}
+                value={formDescricao}
               />
             </>
 
@@ -91,12 +107,16 @@ const Servico = ({ navigation }) => {
       <FlatList
         data={allServicos}
         keyExtractor={item => item.id} 
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({ item }) => {
           return (
             <>
               <Text>Id: {item.id}</Text>
               <Text>Tipo: {item.tipo}</Text>
               <Text>Nome: {item.nome}</Text>
+              <Text>Descrição: {item.descricao}</Text>
               <Text>Ativo: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
               <Button title="-" onPress={() => deleteServico(item.id)} />
               {/* <TouchableHighlight onPress={deleteServico(item.id)}>

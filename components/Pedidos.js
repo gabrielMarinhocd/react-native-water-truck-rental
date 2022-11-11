@@ -1,23 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  SafeAreaView,
-  RefreshControl,
-} from "react-native";
-import {
-  Card,
-  Button,
-  TextInput,
-  List,
-  Title,
-  Paragraph,
-} from "react-native-paper";
+import {  View,  Text,  Modal,  StyleSheet,  Pressable,  FlatList,  SafeAreaView,  RefreshControl,} from "react-native";
+import {  Card,  Button,  TextInput,  List,  Title,  Paragraph, } from "react-native-paper";
 import api from "../api/ApiService.js";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -136,7 +120,7 @@ const Pedido = ({ navigation }) => {
                     <Button
                       style={{ marginTop: 25, marginLeft: 50 }}
                       mode="contained"
-                      onPress={() => setModalVisible(!modalVisible)}
+                      onPress={() => getItensPedido(item.id)}
                     >
                       Ver mais
                     </Button>

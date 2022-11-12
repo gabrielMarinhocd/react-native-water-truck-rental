@@ -8,13 +8,14 @@ import {
   Pressable,
   FlatList,
   SafeAreaView,
+  RefreshControl,
+  Image,
 } from "react-native";
 import { Card, Button, TextInput } from "react-native-paper";
 import DateField from "react-native-datefield";
 
 import sessionStorage from "@react-native-async-storage/async-storage";
 import api from "../api/ApiService.js";
-import { color, set } from "react-native-reanimated";
 
 const Catalago = (navigation, Test) => {
   const [allServicos, setAllServicos] = useState([]);
@@ -28,17 +29,24 @@ const Catalago = (navigation, Test) => {
   const [itens, setItens] = useState([]);
   const [formQuantidade, setFormQuantidade] = useState([]);
   const [dateFormTermino, setDateFormTermino] = useState(new Date());
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const getServicos = async () => {
-      const Servicos = await api.get("/Servico");
-      setAllServicos(Servicos.data);
-    };
-
     if (allServicos.length === 0) {
       getServicos();
     }
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(false);
+    getServicos();
+  };
+
+  const getServicos = async () => {
+    const Servicos = await api.get("/Servico/ativo");
+    const data = Servicos.data.filter((item) => (item.ativo = 1));
+    setAllServicos(data);
+  };
 
   const itemPage = async () => {
     try {
@@ -47,7 +55,7 @@ const Catalago = (navigation, Test) => {
         id_servico: servico.id,
         no_servico: servico.nome,
         local: formLocal,
-        date: dateForm,
+        data_inicio: dateForm,
         hora: formHora,
         forma_pagamento: formFormaPagamento,
         quantidade_litros: formQTDLitros,
@@ -83,7 +91,6 @@ const Catalago = (navigation, Test) => {
     setServico(item);
   };
 
-  console.log(itens);
   return (
     <SafeAreaView>
       <Button
@@ -103,24 +110,38 @@ const Catalago = (navigation, Test) => {
       </View>
       <FlatList
         data={allServicos}
+        style={{marginBottom:150}}
         keyExtractor={(item) => item.id}
         numColumns={2}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({ item }) => {
-          return (
-            <View style={styles.container}>
-              <View style={styles.row}>
-                <Text style={styles.titleStyle}>{item.nome}</Text>
-                <Text style={styles.textContent}> {item.descricao}</Text>
-                <Button
-                  style={styles.button}
-                  mode="contained"
-                  onPress={() => openForm(item)}
-                >
-                  Solicitar
-                </Button>
+          if (item.ativo == 1) {
+            return (
+              <View style={styles.container}>
+               
+                <View style={styles.row}>
+                <Image
+                  style={styles.image}
+                    source={{
+                      uri: `${item.imagem}`,
+                    }}
+                  
+                  />
+                  <Text style={styles.titleStyle}>{item.nome}</Text>
+                  <Text style={styles.textContent}> {item.descricao}</Text>
+                  <Button
+                    style={styles.button}
+                    mode="contained"
+                    onPress={() => openForm(item)}
+                  >
+                    Solicitar
+                  </Button>
+                </View>
               </View>
-            </View>
-          );
+            );
+          }
         }}
       />
       <Modal
@@ -140,7 +161,7 @@ const Catalago = (navigation, Test) => {
             <>
               <TextInput
                 mode="outlined"
-                label="Local"
+                label="Local que serviço deve ocorrer:"
                 onChangeText={setFormLocal}
               />
               <Text style={styles.label}>Data Inicio:</Text>
@@ -149,7 +170,7 @@ const Catalago = (navigation, Test) => {
                 styleInput={{ fontSize: 15 }}
                 onSubmit={(value) => setDateForm(value)}
               />
-              <Text style={styles.label}>Data Termino:</Text>
+              <Text style={styles.label}>Data Termino (opcional):</Text>
               <DateField
                 disabled
                 styleInput={{ fontSize: 15 }}
@@ -160,22 +181,23 @@ const Catalago = (navigation, Test) => {
                 /> */}
               <TextInput
                 mode="outlined"
-                label="Hora:"
+                label="Hora que o serviço deve acontecer:"
                 onChangeText={setFormHora}
               />
+
               <TextInput
                 mode="outlined"
-                label="FormaPagamento:"
+                label="Forma Pagamento:"
                 onChangeText={setFormFormaPagamento}
               />
               <TextInput
                 mode="outlined"
-                label="QTDLitros:"
+                label="Litragem do caminhão:"
                 onChangeText={setFormQTDLitros}
               />
               <TextInput
                 mode="outlined"
-                label="Quantidade:"
+                label="Quantidade de viajens:"
                 onChangeText={setFormQuantidade}
               />
             </>
@@ -185,8 +207,9 @@ const Catalago = (navigation, Test) => {
                   style={{ marginTop: 25, marginLeft: 15 }}
                   mode="contained"
                   onPress={() => itemPage()}
+                  disabled={formQuantidade > 0 ? false : true}
                 >
-                  Proximo
+                  Adicionar
                 </Button>
                 <Button
                   style={{
@@ -210,12 +233,9 @@ const Catalago = (navigation, Test) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 400,
     flex: 2,
-    marginTop: 8,
-    margin: 8,
+    margin:10,
     backgroundColor: "aliceblue",
-    paddingHorizontal: 10,
     borderRadius: 10,
     textAlign: "center",
   },
@@ -224,22 +244,20 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   row: {
-    padding: 10,
     textAlign: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
   },
   textContent: {
     padding: 10,
     fontSize: 12,
     color: "#737373",
+    textAlign: "center",
   },
   titleStyle: {
-    padding: 10,
-    marginLeft: 30,
+    marginLeft: 0,
     color: "#03a9f4",
-    fontSize: 18,
+    fontSize: 14,
     textAlign: "center",
+    lineHeight: 20,
   },
   modalView: {
     marginTop: 100,
@@ -257,6 +275,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   button: {
+    marginRight: 10,
+    marginLeft:10,
+    marginBottom: 10,
     alignContent: "center",
     textAlign: "center",
     padding: 0,
@@ -278,6 +299,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  image: {
+    marginRight : 10,
+    marginLeft: 10,
+    marginBottom: 0,
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+  }
 });
 
 export default Catalago;

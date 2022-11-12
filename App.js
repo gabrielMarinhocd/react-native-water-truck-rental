@@ -45,7 +45,7 @@ export default function App() {
       <NavigationContainer theme={themeDrawer}>
         {/* <Stack1.Navigator> */}
         <Drawer.Navigator initialRouteName="Home">
-          <Drawer.Screen name="Home" component={Home} />
+          <Drawer.Screen name="Water Truck Rental" component={Home} />
           {/* <Drawer.Screen name="Home" component={HomeScreen} /> */}
           <Drawer.Screen name="Cliente " component={Cliente} />
           <Drawer.Screen name="Serviço " component={Servico} />

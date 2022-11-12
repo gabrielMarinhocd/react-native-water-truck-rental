@@ -5,6 +5,7 @@ import { Button, Card, Title, Paragraph } from "react-native-paper";
 import sessionStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { format } from "date-fns";
 
 import api from "../api/ApiService.js";
 
@@ -79,8 +80,8 @@ const FinalizaServico = (navigation) => {
               <Card.Content>
                 <Title>{item.no_servico}</Title>
                 <Paragraph> Local: {item.local}</Paragraph>
-                <Paragraph> Data Inicio: {item.date}</Paragraph>
-                <Paragraph> Data Termino: {item.data_termino}</Paragraph>
+                <Paragraph> Data Inicio: { item.data_inicio == null ? false :format(Date.parse(item.data_inicio), 'dd/MM/yyyy')}</Paragraph>
+                <Paragraph> Data Termino: {item.data_termino  == null ? false : format(Date.parse(item.data_termino), 'dd/MM/yyyy')}</Paragraph>
                 <Paragraph> Forma Pagamento: {item.forma_pagamento}</Paragraph>
                 <Paragraph> Listros: {item.quantidade_litros}</Paragraph>
                 <Button onPress={() => deleteItem()}>

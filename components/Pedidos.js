@@ -17,11 +17,6 @@ const Pedido = ({ navigation }) => {
     setAllPedidos(Pedidos.data);
   };
 
-var formattedDate = format(new Date(2014, 1, 11), 'MM/dd/yyyy');
-
-
-console.log(formattedDate);
-
   useEffect(() => {
     if (allPedidos.length === 0) {
       getPedidos();
@@ -29,6 +24,7 @@ console.log(formattedDate);
   }, []);
 
   const deletePedido = async (id) => {
+    console.log("Teste");
     const isDelete = await api.delete(`/pedido?id=${id}`);
 
     const newData = Object.assign([], allPedidos);
@@ -48,12 +44,10 @@ console.log(formattedDate);
 
   const getItensPedido = async (id) => {
     const get = await api.get(`/pedido/itens?id=${id}`);
-    console.log(id);
     setAllItens(get.data);
 
     setModalVisible(!modalVisible);
   };
-  console.log(allPedidos);
 
   return (
     <SafeAreaView>
@@ -77,12 +71,14 @@ console.log(formattedDate);
               }
               renderItem={({ item }) => {
                 return (
+                  
                   <Card>
                     <Card.Content>
                       <Title>Codigo: {item.id}</Title>
                       <Paragraph>Serviço: {item.no_servico}</Paragraph>
-                      <Paragraph>Data Inicio: {format(Date.parse(item.data_inicio), 'dd/MM/yyyy')}</Paragraph>
-                      <Paragraph>Data Termino: {format(Date.parse(item.data_termino), 'dd/MM/yyyy')}</Paragraph>
+                      <Paragraph>Data Inicio: {item.data_inicio == null ? false : format(Date.parse(item.data_inicio), 'dd/MM/yyyy')}</Paragraph>
+                      <Paragraph>Data Termino: {item.data_termino == null ? false : format(Date.parse(item.data_termino), 'dd/MM/yyyy')}</Paragraph>
+                      <Paragraph>Hora: {item.hora}</Paragraph>
                       <Paragraph>
                         Forma Pagamento: {item.forma_pagamento}
                       </Paragraph>
@@ -118,7 +114,10 @@ console.log(formattedDate);
             <View style={styles.listItem}>
               <Title style={styles.titleStyle}>Pedido {item.id}</Title>
               <View>
-                <Paragraph>Data da solicitação: {format(Date.parse(item.date), 'dd/MM/yyyy')}</Paragraph>
+                <Paragraph style={{ textAlign: "center"}}>Data da Solicitação:</Paragraph>
+                <Paragraph  style={{ textAlign: "center"}}> {format(Date.parse(item.date), 'dd/MM/yyyy')}</Paragraph>
+                <Paragraph  style={{ textAlign: "center"}}> {item.ativo != 1 ? "Cancelado": ""}</Paragraph>
+
                 <View>
                   <View style={styles.alingButton}>
                     <Button

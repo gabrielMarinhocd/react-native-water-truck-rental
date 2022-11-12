@@ -10,6 +10,7 @@ const Servico = ({ navigation }) => {
   const [formTipo, setFormTipo] = useState("");
   const [formDescricao, setFormDescricao] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [formImagem, setFormImagem] = useState("");
 
 
   const save = async () => {
@@ -17,6 +18,7 @@ const Servico = ({ navigation }) => {
       tipo: formTipo,
       descricao: formDescricao, 
       nome: formNome,
+      imagem: formImagem,
     };
 
     const post = await api.post("/servico", createServico);
@@ -91,6 +93,11 @@ const Servico = ({ navigation }) => {
                 placeholder="Descrição:"
                 onChangeText={setFormDescricao}
                 value={formDescricao}
+              />
+                <TextInput
+                placeholder="Imagem:"
+                onChangeText={setFormImagem}
+                value={formImagem}
               />
             </>
 

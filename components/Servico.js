@@ -5,7 +5,6 @@ import {
   Text,
   Modal,
   StyleSheet,
-  Pressable,
   FlatList,
   SafeAreaView,
   RefreshControl,
@@ -49,16 +48,9 @@ const Servico = ({ navigation }) => {
   };
 
   const deleteServico = async (id) => {
-    const isDelete = await api.delete(`/servico?id=${id}`);
+    await api.delete(`/servico?id=${id}`);
 
-    const newData = Object.assign([], allServicos);
-
-    if (isDelete) {
-      const deleteServicoIndex = allServicos.findIndex((data) => data.id == id);
-
-      newData.splice(deleteServicoIndex, 1);
-      setAllServicos(newData);
-    }
+    await onRefresh();
   };
 
   const onRefresh = () => {
@@ -137,7 +129,7 @@ const Servico = ({ navigation }) => {
       </Modal>
 
       <FlatList
-              style={{marginBottom: 40}}
+        style={{ marginBottom: 40 }}
         data={allServicos}
         keyExtractor={(item) => item.id}
         refreshControl={
@@ -146,13 +138,22 @@ const Servico = ({ navigation }) => {
         renderItem={({ item }) => {
           return (
             <View style={styles.centeredView}>
-              <Title style={{textAlign: 'center'}}>Codigo: {item.id}</Title>
+              <Title style={{ textAlign: "center" }}>Codigo: {item.id}</Title>
               <Text style={styles.itenText}>Tipo: {item.tipo}</Text>
               <Text style={styles.itenText}>Nome: {item.nome}</Text>
               <Text style={styles.itenText}>Descrição: {item.descricao}</Text>
-              <Text style={styles.itenText}>Status: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
+              <Text style={styles.itenText}>
+                Status: {item.ativo == 1 ? "Ativo" : "Destivado"}
+              </Text>
 
-              <Button style={{marginTop: 10}} mode="contained" onPress={() => deleteServico(item.id)} disabled={item.ativo == 2 }>Desativar</Button>
+              <Button
+                style={{ marginTop: 10 }}
+                mode="contained"
+                onPress={() => deleteServico(item.id)}
+                disabled={item.ativo == 2}
+              >
+                Desativar
+              </Button>
             </View>
           );
         }}
@@ -163,17 +164,15 @@ const Servico = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   modal: {
-    height: 50,
-    flex: 2,
-    margin: 20,
-    marginVertical: 120,
+    marginTop: 110,
+    margin: 10,
     backgroundColor: "white",
-    borderRadius: 10,
-    textAlign: "center",
-    elevation: 2,
+    borderRadius: 20,
+    elevation: 5,
     shadowColor: "#03a9f4",
-    shadowOpacity: 0.2,
+    shadowOpacity: 1.2,
     shadowRadius: 3,
+    shadowRadius: 4,
   },
   centeredView: {
     flex: 2,
@@ -218,8 +217,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   itenText: {
-    padding: 3
-  }
+    padding: 3,
+  },
 });
 
 export default Servico;

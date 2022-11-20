@@ -103,7 +103,7 @@ const Catalago = (navigation, Test) => {
 
       <View>
         <TextInput
-          style={{ textAlign: "center", margin: 15 }}
+          style={{ textAlign: "center", margin: 15, color:"blue" }}
           value="Distrito Federal"
           editable={false}
         />
@@ -238,6 +238,10 @@ const styles = StyleSheet.create({
     backgroundColor: "aliceblue",
     borderRadius: 10,
     textAlign: "center",
+    elevation: 2,
+    shadowColor: '#03a9f4',
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   label: {
     paddingTop: 10,

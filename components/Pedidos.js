@@ -1,7 +1,23 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal,  StyleSheet,  Pressable,  FlatList,  SafeAreaView,  RefreshControl,} from "react-native";
-import {  Card,  Button,  TextInput,  List,  Title,  Paragraph, } from "react-native-paper";
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  SafeAreaView,
+  RefreshControl,
+} from "react-native";
+import {
+  Card,
+  Button,
+  TextInput,
+  List,
+  Title,
+  Paragraph,
+} from "react-native-paper";
 import api from "../api/ApiService.js";
 import { format } from "date-fns";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -12,16 +28,16 @@ const Pedido = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const getPedidos = async () => {
-    const Pedidos = await api.get("/Pedido");
-    setAllPedidos(Pedidos.data);
-  };
-
   useEffect(() => {
     if (allPedidos.length === 0) {
       getPedidos();
     }
   }, []);
+
+  const getPedidos = async () => {
+    const Pedidos = await api.get("/Pedido");
+    setAllPedidos(Pedidos.data);
+  };
 
   const deletePedido = async (id) => {
     console.log("Teste");
@@ -30,10 +46,7 @@ const Pedido = ({ navigation }) => {
     const newData = Object.assign([], allPedidos);
 
     if (isDelete) {
-      const deletePedidoIndex = allPedidos.findIndex((data) => data.id == id);
-
-      newData.splice(deletePedidoIndex, 1);
-      setAllPedidos(newData);
+      getPedidos()
     }
   };
 
@@ -71,13 +84,22 @@ const Pedido = ({ navigation }) => {
               }
               renderItem={({ item }) => {
                 return (
-                  
                   <Card>
                     <Card.Content>
                       <Title>Codigo: {item.id}</Title>
                       <Paragraph>Serviço: {item.no_servico}</Paragraph>
-                      <Paragraph>Data Inicio: {item.data_inicio == null ? false : format(Date.parse(item.data_inicio), 'dd/MM/yyyy')}</Paragraph>
-                      <Paragraph>Data Termino: {item.data_termino == null ? false : format(Date.parse(item.data_termino), 'dd/MM/yyyy')}</Paragraph>
+                      <Paragraph>
+                        Data Inicio:{" "}
+                        {item.data_inicio == null
+                          ? false
+                          : format(Date.parse(item.data_inicio), "dd/MM/yyyy")}
+                      </Paragraph>
+                      <Paragraph>
+                        Data Termino:{" "}
+                        {item.data_termino == null
+                          ? false
+                          : format(Date.parse(item.data_termino), "dd/MM/yyyy")}
+                      </Paragraph>
                       <Paragraph>Hora: {item.hora}</Paragraph>
                       <Paragraph>
                         Forma Pagamento: {item.forma_pagamento}
@@ -114,9 +136,17 @@ const Pedido = ({ navigation }) => {
             <View style={styles.listItem}>
               <Title style={styles.titleStyle}>Pedido {item.id}</Title>
               <View>
-                <Paragraph style={{ textAlign: "center"}}>Data da Solicitação:</Paragraph>
-                <Paragraph  style={{ textAlign: "center"}}> {format(Date.parse(item.date), 'dd/MM/yyyy')}</Paragraph>
-                <Paragraph  style={{ textAlign: "center"}}> {item.ativo != 1 ? "Cancelado": ""}</Paragraph>
+                <Paragraph style={{ textAlign: "center" }}>
+                  Data da Solicitação:
+                </Paragraph>
+                <Paragraph style={{ textAlign: "center" }}>
+                  {" "}
+                  {format(Date.parse(item.date), "dd/MM/yyyy")}
+                </Paragraph>
+                <Paragraph style={{ textAlign: "center" }}>
+                  {" "}
+                  {item.ativo != 1 ? "Cancelado" : "Em adamento"}
+                </Paragraph>
 
                 <View>
                   <View style={styles.alingButton}>
@@ -125,22 +155,25 @@ const Pedido = ({ navigation }) => {
                       mode="contained"
                       onPress={() => getItensPedido(item.id)}
                     >
-                      Ver mais
+                     Ver Mais
                     </Button>
                     <Button
                       style={{
                         marginTop: 25,
-                        marginRight: 50,
-                        backgroundColor: "red",
+                        marginRight: 40,
+                        backgroundColor: item.ativo == 1 ? "red"  : "#e0e0e0",
+                        borderWidth: 1,
+                        borderColor:  item.ativo == 1 ? "red" : "white",
+                        color: item.ativo == 1 ? "red" :'#03a9f4' ,
                       }}
                       mode="contained"
                       onPress={() => deletePedido(item.id)}
+                      disabled={item.ativo == 2}
                     >
                       Cancelar
                     </Button>
                   </View>
                 </View>
-              
               </View>
             </View>
           );
@@ -162,6 +195,8 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 20,
     borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#03a9f4',
   },
   seeMore: {
     marginTop: 10,

@@ -1,7 +1,17 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {  View,  Text,  Modal, TextInput,   StyleSheet,  Pressable,  FlatList,  Button,  SafeAreaView,  RefreshControl} from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  SafeAreaView,
+  RefreshControl,
+} from "react-native";
 import api from "../api/ApiService.js";
+import { Card, Button, TextInput, Title } from "react-native-paper";
 
 const Servico = ({ navigation }) => {
   const [allServicos, setAllServicos] = useState([]);
@@ -12,11 +22,10 @@ const Servico = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [formImagem, setFormImagem] = useState("");
 
-
   const save = async () => {
     const createServico = {
       tipo: formTipo,
-      descricao: formDescricao, 
+      descricao: formDescricao,
       nome: formNome,
       imagem: formImagem,
     };
@@ -29,10 +38,9 @@ const Servico = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if(allServicos.length === 0){
+    if (allServicos.length === 0) {
       getServicos();
     }
-    
   }, []);
 
   const getServicos = async () => {
@@ -40,32 +48,29 @@ const Servico = ({ navigation }) => {
     setAllServicos(Servicos.data);
   };
 
-
   const deleteServico = async (id) => {
     const isDelete = await api.delete(`/servico?id=${id}`);
 
-    const newData =  Object.assign([], allServicos);
+    const newData = Object.assign([], allServicos);
 
-    if (isDelete){
-      const deleteServicoIndex = allServicos.findIndex(
-        (data) => data.id  == id
-      );
-     
-      newData.splice(deleteServicoIndex , 1);
-      setAllServicos(newData)
+    if (isDelete) {
+      const deleteServicoIndex = allServicos.findIndex((data) => data.id == id);
+
+      newData.splice(deleteServicoIndex, 1);
+      setAllServicos(newData);
     }
-
   };
 
-  
   const onRefresh = () => {
     setRefreshing(false);
     getServicos();
   };
 
   return (
-    <SafeAreaView style={styles.centeredView}>
-      <Button title="+" onPress={() => setModalVisible(true)} />
+    <SafeAreaView>
+      <Button onPress={() => setModalVisible(true)} mode="contained">
+        NOVO
+      </Button>
       <Modal
         animationType="slide"
         transparent={true}
@@ -74,64 +79,81 @@ const Servico = ({ navigation }) => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView}>
+        <View style={styles.modal}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Cadastrar:</Text>
+            <Title style={styles.modalText}>Cadastrar Serviço</Title>
 
             <>
               <TextInput
-                placeholder="Nome:"
+                mode="outlined"
+                label="Nome:"
                 onChangeText={setFormNome}
                 value={formNome}
               />
               <TextInput
-                placeholder="Tipo:"
+                mode="outlined"
+                label="Tipo:"
                 onChangeText={setFormTipo}
                 value={formTipo}
               />
-                <TextInput
-                placeholder="Descrição:"
+              <TextInput
+                mode="outlined"
+                label="Descrição:"
                 onChangeText={setFormDescricao}
                 value={formDescricao}
               />
-                <TextInput
-                placeholder="Imagem:"
+              <TextInput
+                mode="outlined"
+                label="Imagem:"
                 onChangeText={setFormImagem}
                 value={formImagem}
               />
             </>
 
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={save}
-            >
-              <Text style={styles.textStyle}>Salvar</Text>
-            </Pressable>
+            <View>
+              <View style={styles.alingButton}>
+                <Button
+                  style={{ marginTop: 25, marginLeft: 15 }}
+                  mode="contained"
+                  onPress={save}
+                >
+                  Adicionar
+                </Button>
+                <Button
+                  style={{
+                    marginTop: 25,
+                    marginRight: 15,
+                    backgroundColor: "red",
+                  }}
+                  mode="contained"
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  Cancelar
+                </Button>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
 
       <FlatList
+              style={{marginBottom: 40}}
         data={allServicos}
-        keyExtractor={item => item.id} 
+        keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         renderItem={({ item }) => {
           return (
-            <>
-              <Text>Id: {item.id}</Text>
-              <Text>Tipo: {item.tipo}</Text>
-              <Text>Nome: {item.nome}</Text>
-              <Text>Descrição: {item.descricao}</Text>
-              <Text>Ativo: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
-              <Button title="-" onPress={() => deleteServico(item.id)} />
-              {/* <TouchableHighlight onPress={deleteServico(item.id)}>
-                <View style={styles.button}>
-                  <Text>Touch Here</Text>
-                </View>
-              </TouchableHighlight> */}
-            </>
+            <View style={styles.centeredView}>
+              <Title style={{textAlign: 'center'}}>Codigo: {item.id}</Title>
+              <Text style={styles.itenText}>Tipo: {item.tipo}</Text>
+              <Text style={styles.itenText}>Nome: {item.nome}</Text>
+              <Text style={styles.itenText}>Descrição: {item.descricao}</Text>
+              <Text style={styles.itenText}>Status: {item.ativo == 1 ? "Ativo" : "Destivado"}</Text>
+
+              <Button style={{marginTop: 10}} mode="contained" onPress={() => deleteServico(item.id)} disabled={item.ativo == 2 }>Desativar</Button>
+            </View>
           );
         }}
       />
@@ -140,28 +162,38 @@ const Servico = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
+  modal: {
+    height: 50,
+    flex: 2,
+    margin: 20,
+    marginVertical: 120,
+    backgroundColor: "white",
+    borderRadius: 10,
+    textAlign: "center",
+    elevation: 2,
+    shadowColor: "#03a9f4",
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
-  modalView: {
+  centeredView: {
+    flex: 2,
     margin: 10,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 100,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 10,
+    textAlign: "center",
+    elevation: 2,
+    shadowColor: "#03a9f4",
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    padding: 10,
+    marginColor: "black",
+  },
+  modalView: {
+    marginTop: 100,
+    margin: 20,
   },
   button: {
+    margin: 10,
     borderRadius: 20,
     padding: 10,
     elevation: 2,
@@ -181,6 +213,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
+  alingButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  itenText: {
+    padding: 3
+  }
 });
 
 export default Servico;

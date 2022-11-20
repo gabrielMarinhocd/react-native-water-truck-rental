@@ -49,7 +49,7 @@ export default function App() {
           {/* <Drawer.Screen name="Home" component={HomeScreen} /> */}
           <Drawer.Screen name="Cliente " component={Cliente} />
           <Drawer.Screen name="Serviço " component={Servico} />
-          <Drawer.Screen name="Catalago " component={Catalago} />
+          <Drawer.Screen name="Catálogo " component={Catalago} />
           <Drawer.Screen name="FinalizaServico" component={FinalizaServico} />
           <Drawer.Screen name="Pedidos" component={Pedido} />
         </Drawer.Navigator>

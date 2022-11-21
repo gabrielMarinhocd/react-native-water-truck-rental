@@ -142,6 +142,7 @@ const Servico = ({ navigation }) => {
               <Text style={styles.itenText}>Tipo: {item.tipo}</Text>
               <Text style={styles.itenText}>Nome: {item.nome}</Text>
               <Text style={styles.itenText}>Descrição: {item.descricao}</Text>
+              <Text style={styles.itenText}>Link IMG: {item.imagem}</Text>
               <Text style={styles.itenText}>
                 Status: {item.ativo == 1 ? "Ativo" : "Destivado"}
               </Text>

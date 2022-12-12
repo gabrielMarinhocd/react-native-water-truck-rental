@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://gabriel-marinho-pipa.herokuapp.com/",
+  baseURL: "https://water-truck.onrender.com/",
 });
 
 export default api;
